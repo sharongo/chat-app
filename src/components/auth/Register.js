@@ -11,6 +11,7 @@ import {
     GridColumn
 } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
+import firebase from '../../../src/firebase'
 
 const Register = props => {
 
@@ -21,10 +22,27 @@ const Register = props => {
         passwordConfirmation: ''
     });
 
-    const { name, email, password, passwordConfirmation } = formData;
+    const { username, email, password, passwordConfirmation } = formData;
 
 
     const handleChange = e => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+    }
+
+    const handleSubmit = e => {
+        e.preventDefault();
+        firebase
+            .auth()
+            .createUserWithEmailAndPassword(email, password)
+            .then(createdUser => {
+                console.log(createdUser)
+            })
+            .catch(err => {
+                console.error(err)
+            });
 
     }
 
@@ -35,35 +53,39 @@ const Register = props => {
                     <Icon name="puzzle piece" color="orange" />
                     Register For Chat App
                 </Header>
-                <Form size="large">
+                <Form onSubmit={(e) => handleSubmit(e)} size="large">
                     <Segment stacked>
                         <Form.Input fluid
                             name="username"
                             icon="user"
                             iconPosition="left"
                             placeholder="Username"
-                            onChange={() => handleChange}
+                            value={username}
+                            onChange={(e) => handleChange(e)}
                             type="text" />
                         <Form.Input fluid
                             name="email"
                             icon="mail"
                             iconPosition="left"
                             placeholder="Email"
-                            onChange={() => handleChange}
+                            value={email}
+                            onChange={(e) => handleChange(e)}
                             type="email" />
                         <Form.Input fluid
                             name="password"
                             icon="lock"
                             iconPosition="left"
                             placeholder="Password"
-                            onChange={() => handleChange}
+                            value={password}
+                            onChange={(e) => handleChange(e)}
                             type="password" />
                         <Form.Input fluid
                             name="passwordConfirmation"
                             icon="repeat"
                             iconPosition="left"
                             placeholder="Password Confirmation"
-                            onChange={() => handleChange}
+                            value={passwordConfirmation}
+                            onChange={(e) => handleChange(e)}
                             type="password" />
                         <Button color="orange" fluid size="large">
                             Submit
