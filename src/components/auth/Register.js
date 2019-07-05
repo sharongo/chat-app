@@ -22,7 +22,11 @@ const Register = props => {
         passwordConfirmation: ''
     });
 
+    const [errors, setErrors] = useState([]);
+
     const { username, email, password, passwordConfirmation } = formData;
+
+
 
 
     const handleChange = e => {
@@ -32,17 +36,78 @@ const Register = props => {
         });
     }
 
+    const isFormValid = () => {
+        let error;
+
+        if (isFormEmpty(formData)) {
+            error = { message: 'Fill in all fields' }
+            setErrors([
+                ...errors,
+                error
+            ]);
+            console.log(errors)
+            return false;
+        } else if (!isPasswordValid(formData)) {
+            error = { message: "Password is invalid" };
+            setErrors([
+                ...errors,
+                error
+            ]);
+            console.log(errors)
+            return false;
+        } else {
+            // form is valid
+            return true;
+        }
+
+    }
+
+    const displayErrors = errors => {
+        errors.map((error, i) => { return <p key={i}>{error.message}</p> });
+    }
+
+    const isPasswordValid = ({ password, passwordConfirmation }) => {
+        if (password.length < 6 || passwordConfirmation.length < 6) {
+            return false;
+        } else if (password !== passwordConfirmation) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    const isFormEmpty = ({ username, email, password, passwordConfirmation }) => {
+        if (username.length === 0) {
+            return true;
+        }
+        else if (email.length === 0) {
+            return true;
+        }
+        else if (password.length === 0) {
+            return true;
+        }
+        else if (passwordConfirmation.length === 0) {
+            return true;
+        }
+
+
+    }
+
+
+
     const handleSubmit = e => {
-        e.preventDefault();
-        firebase
-            .auth()
-            .createUserWithEmailAndPassword(email, password)
-            .then(createdUser => {
-                console.log(createdUser)
-            })
-            .catch(err => {
-                console.error(err)
-            });
+        if (isFormValid()) {
+            e.preventDefault();
+            firebase
+                .auth()
+                .createUserWithEmailAndPassword(email, password)
+                .then(createdUser => {
+                    console.log(createdUser)
+                })
+                .catch(err => {
+                    console.error(err)
+                });
+        }
 
     }
 
@@ -92,6 +157,12 @@ const Register = props => {
                         </Button>
                     </Segment>
                 </Form>
+                {errors && errors.length > 0 ? (
+                    <Message error>
+                        <h3>Errors:</h3>
+                        {(errors) => displayErrors(errors)}
+                    </Message>
+                ) : null}
                 <Message>
                     Already a user?{" "}
                     <Link to="/login">
