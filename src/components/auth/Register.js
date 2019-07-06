@@ -24,6 +24,9 @@ const Register = props => {
 
     const [errors, setErrors] = useState([]);
 
+    const [loading, setLoading] = useState(false);
+    
+
     const { username, email, password, passwordConfirmation } = formData;
 
 
@@ -38,7 +41,7 @@ const Register = props => {
 
     const isFormValid = () => {
         let error;
-
+        //setErrors([]);
         if (isFormEmpty(formData)) {
             error = { message: 'Fill in all fields' }
             setErrors([
@@ -96,16 +99,24 @@ const Register = props => {
 
 
     const handleSubmit = e => {
+        e.preventDefault();
         if (isFormValid()) {
-            e.preventDefault();
+            setErrors([]);
+            setLoading(true);
             firebase
                 .auth()
                 .createUserWithEmailAndPassword(email, password)
                 .then(createdUser => {
                     console.log(createdUser)
+                    setLoading(false);
                 })
                 .catch(err => {
                     console.error(err)
+                    setLoading(false);
+                    setErrors([
+                        ...errors,
+                        err
+                    ]);
                 });
         }
 
@@ -152,7 +163,7 @@ const Register = props => {
                             value={passwordConfirmation}
                             onChange={(e) => handleChange(e)}
                             type="password" />
-                        <Button color="orange" fluid size="large">
+                        <Button disabled={loading} className={loading ? 'loading' : ''} color="orange" fluid size="large">
                             Submit
                         </Button>
                     </Segment>
@@ -160,7 +171,9 @@ const Register = props => {
                 {errors && errors.length > 0 ? (
                     <Message error>
                         <h3>Errors:</h3>
-                        {(errors) => displayErrors(errors)}
+                        {errors.map((error, i) => (
+                            <p key={i}>{error.message}</p>
+                        ))}
                     </Message>
                 ) : null}
                 <Message>
