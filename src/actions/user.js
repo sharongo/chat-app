@@ -1,4 +1,5 @@
 import * as actionTypes from './types'
+import { async } from 'q';
 
 
 export const setUser = user => async dispatch => {
@@ -11,5 +12,15 @@ export const setUser = user => async dispatch => {
         })
     } catch (error) {
         console.log(error)
+    }
+}
+
+export const clearUser = () => async dispatch => {
+    try {
+        dispatch({
+            type: actionTypes.CLEAR_USER
+        })
+    } catch (error) {
+        
     }
 }

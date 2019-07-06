@@ -15,14 +15,6 @@ import firebase from './firebase'
 
 function App() {
 
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        return <Redirect to="/"/>;
-      }
-    });
-  }, [])
-
   return (
     <Provider store={store}>
       <Router>

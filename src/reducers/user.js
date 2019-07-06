@@ -12,7 +12,13 @@ export default function (state = initialState, action) {
         case actionTypes.SET_USER:
             return {
                 ...state,
-                currentUser: payload,
+                currentUser: payload.currentUser,
+                isLoading: false
+            }
+        case actionTypes.CLEAR_USER:
+            return {
+                ...state,
+                currentUser: null,
                 isLoading: false
             }
         default:
