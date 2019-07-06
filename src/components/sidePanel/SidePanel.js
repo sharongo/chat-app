@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Menu } from 'semantic-ui-react'
 import UserPanel from './UserPanel'
 
-const SidePanel = props => {
+const SidePanel = ({currentUser}) => {
     return (
         <Menu
             size="large"
@@ -12,7 +12,7 @@ const SidePanel = props => {
             vertical
             style={{backgroundColor: '#4c3c4c', fontSize: '1.2rem'}}
         >
-            <UserPanel/>
+            <UserPanel currentUser={currentUser}/>
         </Menu>
     )
 }
