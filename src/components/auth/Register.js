@@ -13,7 +13,7 @@ import {
 import { Link } from 'react-router-dom'
 import firebase from '../../../src/firebase'
 
-const Register = props => {
+const Register = ({ history }) => {
 
     const [formData, setFormData] = useState({
         username: '',
@@ -25,7 +25,7 @@ const Register = props => {
     const [errors, setErrors] = useState([]);
 
     const [loading, setLoading] = useState(false);
-    
+
 
     const { username, email, password, passwordConfirmation } = formData;
 
@@ -109,6 +109,7 @@ const Register = props => {
                 .then(createdUser => {
                     console.log(createdUser)
                     setLoading(false);
+                    history.push("/")
                 })
                 .catch(err => {
                     console.error(err)

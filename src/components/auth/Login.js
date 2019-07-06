@@ -13,7 +13,7 @@ import {
 import { Link } from 'react-router-dom'
 import firebase from '../../../src/firebase'
 
-const Login = props => {
+const Login = ({ history }) => {
 
     const [formData, setFormData] = useState({
         email: '',
@@ -56,6 +56,8 @@ const Login = props => {
                 .then(signedInUser => {
                     console.log(signedInUser);
                     setLoading(false);
+                    history.push("/");
+
                 })
                 .catch(err => {
                     console.error(err);
