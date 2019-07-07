@@ -2,9 +2,11 @@ import React, { useState, Fragment, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Menu, Icon, Modal, Form, Input, Button } from 'semantic-ui-react'
 import firebase from '../../firebase'
+import {setCurrentChannel} from '../../actions/channel'
+import {connect} from 'react-redux'
 
 
-const Channels = ({ currentUser }) => {
+const Channels = ({ currentUser, setCurrentChannel }) => {
     const [channels, setChannels] = useState([])
 
     const [modal, setModal] = useState(false)
@@ -100,7 +102,11 @@ const Channels = ({ currentUser }) => {
         }
     }
 
-    
+    const changeChannel = (channel) => {
+        setCurrentChannel(channel)
+    }
+
+
 
     return (
         <Fragment>
@@ -114,7 +120,7 @@ const Channels = ({ currentUser }) => {
                 {channels.length > 0 && channels.map(channel => (
                     <Menu.Item 
                         key={channel.id} 
-                        onClick={() => console.log(channel)}
+                        onClick={() => changeChannel(channel)}
                         name={channel.name}
                         style={{opacity: 0.7}}
                     >
@@ -158,7 +164,7 @@ const Channels = ({ currentUser }) => {
 }
 
 Channels.propTypes = {
-
+    setCurrentChannel: PropTypes.func
 }
 
-export default Channels
+export default connect(null, {setCurrentChannel})(Channels)
