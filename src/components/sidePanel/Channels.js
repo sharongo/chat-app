@@ -2,8 +2,8 @@ import React, { useState, Fragment, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Menu, Icon, Modal, Form, Input, Button } from 'semantic-ui-react'
 import firebase from '../../firebase'
-import {setCurrentChannel} from '../../actions/channel'
-import {connect} from 'react-redux'
+import { setCurrentChannel } from '../../actions/channel'
+import { connect } from 'react-redux'
 
 
 const Channels = ({ currentUser, setCurrentChannel }) => {
@@ -18,26 +18,48 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
         channelDetails: ''
     })
 
+    const [firstLoad, setFirstLoad] = useState(true)
+
+    const [activeChannelId, setActiveChannelId] = useState('')
+
     const { channelName, channelDetails } = channelData
 
     useEffect(() => {
-        addListeners()
-       
+        addListeners();
+
+        return () => {
+            removeListeners();
+        }
     }, [])
 
-    const loadedChannels = []
+    const removeListeners = () => {
+        setChannelsRef(firebase.database().ref('channels').off())
+    }
 
     const addListeners = () => {
-    
-        //let loadedChannels = [];
+        let loadedChannels = [];
         channelsRef.on('child_added', snap => {
             loadedChannels.push(snap.val());
             setChannels([
                 ...channels,
                 channels.push(snap.val())
             ])
-            console.log(loadedChannels);
+            setFirstChannel()
         })
+    }
+
+    const setFirstChannel = () => {
+        const firstChannel = channels[0]
+        if (firstLoad && channels.length > 0) {
+            setCurrentChannel(firstChannel)
+            setActiveChannel(firstChannel)
+        }
+        setFirstLoad(false)
+    }
+
+    const setActiveChannel = (channel) => {
+        setActiveChannelId(channel.id)
+        
     }
 
     const closeModal = () => {
@@ -51,9 +73,6 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
         })
     }
 
-    const displayChannels = (channels) => {
-
-    }
 
     const openModal = () => {
         setModal(true)
@@ -103,6 +122,7 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
     }
 
     const changeChannel = (channel) => {
+        setActiveChannel(channel)
         setCurrentChannel(channel)
     }
 
@@ -118,11 +138,12 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
                     ({channels.length}) <Icon name="add" onClick={() => openModal()} />
                 </Menu.Item>
                 {channels.length > 0 && channels.map(channel => (
-                    <Menu.Item 
-                        key={channel.id} 
+                    <Menu.Item
+                        key={channel.id}
                         onClick={() => changeChannel(channel)}
                         name={channel.name}
-                        style={{opacity: 0.7}}
+                        style={{ opacity: 0.7 }}
+                        active={channel.id === activeChannelId}
                     >
                         #{channel.name}
                     </Menu.Item>
@@ -167,4 +188,4 @@ Channels.propTypes = {
     setCurrentChannel: PropTypes.func
 }
 
-export default connect(null, {setCurrentChannel})(Channels)
+export default connect(null, { setCurrentChannel })(Channels)
