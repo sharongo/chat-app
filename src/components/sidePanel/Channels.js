@@ -1,7 +1,8 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState, Fragment, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Menu, Icon, Modal, Form, Input, Button } from 'semantic-ui-react'
 import firebase from '../../firebase'
+
 
 const Channels = ({ currentUser }) => {
     const [channels, setChannels] = useState([])
@@ -17,6 +18,26 @@ const Channels = ({ currentUser }) => {
 
     const { channelName, channelDetails } = channelData
 
+    useEffect(() => {
+        addListeners()
+       
+    }, [])
+
+    const loadedChannels = []
+
+    const addListeners = () => {
+    
+        //let loadedChannels = [];
+        channelsRef.on('child_added', snap => {
+            loadedChannels.push(snap.val());
+            setChannels([
+                ...channels,
+                channels.push(snap.val())
+            ])
+            console.log(loadedChannels);
+        })
+    }
+
     const closeModal = () => {
         setModal(false)
     }
@@ -26,6 +47,10 @@ const Channels = ({ currentUser }) => {
             ...channelData,
             [e.target.name]: e.target.value
         })
+    }
+
+    const displayChannels = (channels) => {
+
     }
 
     const openModal = () => {
@@ -75,6 +100,8 @@ const Channels = ({ currentUser }) => {
         }
     }
 
+    
+
     return (
         <Fragment>
             <Menu.Menu style={{ paddingBottom: '2em' }}>
@@ -84,6 +111,16 @@ const Channels = ({ currentUser }) => {
                 </span>{' '}
                     ({channels.length}) <Icon name="add" onClick={() => openModal()} />
                 </Menu.Item>
+                {channels.length > 0 && channels.map(channel => (
+                    <Menu.Item 
+                        key={channel.id} 
+                        onClick={() => console.log(channel)}
+                        name={channel.name}
+                        style={{opacity: 0.7}}
+                    >
+                        #{channel.name}
+                    </Menu.Item>
+                ))}
             </Menu.Menu>
             <Modal basic open={modal} onClose={closeModal}>
                 <Modal.Header>Add A Channel</Modal.Header>
