@@ -1,14 +1,22 @@
 import React, { useState, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { Menu, Icon, Modal, Form, Input, Button } from 'semantic-ui-react'
+import firebase from '../../firebase'
 
-const Channels = props => {
+const Channels = ({ currentUser }) => {
     const [channels, setChannels] = useState([])
+
     const [modal, setModal] = useState(false)
+
+    const [channelsRef, setChannelsRef] = useState(firebase.database().ref('channels'))
+
     const [channelData, setChannelData] = useState({
         channelName: '',
         channelDetails: ''
     })
+
+    const { channelName, channelDetails } = channelData
+
     const closeModal = () => {
         setModal(false)
     }
@@ -24,6 +32,49 @@ const Channels = props => {
         setModal(true)
     }
 
+    const isFormValid = ({ channelName, channelDetails }) => {
+        return channelName && channelDetails
+    }
+
+    const addChannel = () => {
+        const key = channelsRef.push().key;
+
+        const newChannel = {
+            id: key,
+            name: channelName,
+            details: channelDetails,
+            createdBy: {
+                name: currentUser ? currentUser.email : 'defaultName',
+                avatar: 'avatar.com'
+            }
+
+        }
+        channelsRef
+            .child(key)
+            .update(newChannel)
+            .then(() => {
+                setChannelData({
+                    channelName: '',
+                    channelDetails: ''
+                })
+                closeModal();
+                console.log('channel added')
+            })
+            .catch(err => {
+                console.error(err)
+            })
+
+    }
+
+    const handleSubmit = e => {
+        e.preventDefault()
+        if (isFormValid(channelData)) {
+            addChannel();
+        } else {
+
+        }
+    }
+
     return (
         <Fragment>
             <Menu.Menu style={{ paddingBottom: '2em' }}>
@@ -31,13 +82,13 @@ const Channels = props => {
                     <span>
                         <Icon name="exchange" /> CHANNELS
                 </span>{' '}
-                    ({channels.length}) <Icon name="add" onClick={() => openModal()}/>
+                    ({channels.length}) <Icon name="add" onClick={() => openModal()} />
                 </Menu.Item>
             </Menu.Menu>
             <Modal basic open={modal} onClose={closeModal}>
                 <Modal.Header>Add A Channel</Modal.Header>
                 <Modal.Content>
-                    <Form>
+                    <Form onSubmit={(e) => handleSubmit(e)}>
                         <Form.Field>
                             <Input
                                 fluid
@@ -57,12 +108,12 @@ const Channels = props => {
                     </Form>
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button color="green" inverted>
+                    <Button color="green" inverted onClick={(e) => handleSubmit(e)}>
                         <Icon name="checkmark" /> Add
-                </Button>
+                    </Button>
                     <Button color="red" inverted onClick={() => closeModal()}>
                         <Icon name="remove" /> Cancel
-                </Button>
+                    </Button>
                 </Modal.Actions>
             </Modal>
         </Fragment>
