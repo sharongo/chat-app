@@ -9,7 +9,6 @@ import firebase from '../../firebase'
 
 const Messages = ({ currentChannel, currentUser }) => {
 
-    const [messagesRef, setMessagesRef] = useState(firebase.database().ref('messages'))
     //const [channel, setchannel]   = useState(currentChannel)
     const [user, setUser] = useState(currentUser)
     const [messages, setMessages] = useState([])
@@ -26,18 +25,9 @@ const Messages = ({ currentChannel, currentUser }) => {
     }
 
     const addMessageListener = channelId => {
-        let loadedMessages = [];
-        messagesRef.child(channelId).on('child_added', snap => {
-           // loadedMessages.push(snap.val())
-            // setMessages([
-            //     ...messages,
-            //     snap.val()
-            //    // messages.push(snap.val())
-            // ])
+        firebase.database().ref('messages').child(channelId).on('child_added', snap => {
             setMessages(messages => messages.concat(snap.val()))
-            setMessagesLoading(false)
-
-            
+            setMessagesLoading(false)     
         })
         console.log(messages)
     }
@@ -58,7 +48,7 @@ const Messages = ({ currentChannel, currentUser }) => {
             </Segment>
             <MessagesForm
                 currentChannel={currentChannel} 
-                messagesRef={messagesRef}
+                messagesRef={firebase.database().ref('messages')}
                 currentUser={user} />
         </Fragment>
     )

@@ -11,8 +11,6 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
 
     const [modal, setModal] = useState(false)
 
-    const [channelsRef, setChannelsRef] = useState(firebase.database().ref('channels'))
-
     const [channelData, setChannelData] = useState({
         channelName: '',
         channelDetails: ''
@@ -26,14 +24,14 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
 
     useEffect(() => {
         addListeners();
-
+ 
         return () => {
             removeListeners();
         }
     }, [])
 
     const removeListeners = () => {
-        setChannelsRef(firebase.database().ref('channels').off())
+        firebase.database().ref('channels').off()
     }
 
     const addListeners = () => {
@@ -41,7 +39,7 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
             setChannels(channels => channels.concat(snap.val()))
             
         })
-        setFirstChannel()
+        
     }
 
     const setFirstChannel = () => {
@@ -79,7 +77,7 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
     }
 
     const addChannel = () => {
-        const key = channelsRef.push().key;
+        const key = firebase.database().ref('channels').push().key;
 
         const newChannel = {
             id: key,
@@ -91,7 +89,7 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
             }
 
         }
-        channelsRef
+        firebase.database().ref('channels')
             .child(key)
             .update(newChannel)
             .then(() => {
