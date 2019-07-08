@@ -37,15 +37,11 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
     }
 
     const addListeners = () => {
-        let loadedChannels = [];
-        channelsRef.on('child_added', snap => {
-            loadedChannels.push(snap.val());
-            setChannels([
-                ...channels,
-                channels.push(snap.val())
-            ])
-            setFirstChannel()
+        firebase.database().ref('channels').on('child_added', snap => {
+            setChannels(channels => channels.concat(snap.val()))
+            
         })
+        setFirstChannel()
     }
 
     const setFirstChannel = () => {
@@ -134,7 +130,7 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
                 <Menu.Item>
                     <span>
                         <Icon name="exchange" /> CHANNELS
-                </span>{' '}
+                    </span>{' '}
                     ({channels.length}) <Icon name="add" onClick={() => openModal()} />
                 </Menu.Item>
                 {channels.length > 0 && channels.map(channel => (

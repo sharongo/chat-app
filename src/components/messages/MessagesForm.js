@@ -7,7 +7,7 @@ const MessagesForm = ({ messagesRef, currentChannel, currentUser }) => {
     const [message, setMessage] = useState('')
     const [loading, setLoading] = useState(null)
     const [errors, setErrors] = useState([])
-
+    console.log(currentChannel)
     const [channel, setChannel] = useState(currentChannel)
     const [user, setUser] = useState(currentUser)
 
@@ -19,7 +19,7 @@ const MessagesForm = ({ messagesRef, currentChannel, currentUser }) => {
         if (message) {
             setLoading(true)
             messagesRef
-                .child(channel.id)
+                .child(currentChannel.id)
                 .push()
                 .set(createMessage())
                 .then(() => {

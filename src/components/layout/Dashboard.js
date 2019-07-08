@@ -21,7 +21,7 @@ const Dashboard = ({
   clearUser,
   channel: { currentChannel }
 }) => {
-
+console.log(currentChannel)
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
