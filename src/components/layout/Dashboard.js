@@ -13,7 +13,14 @@ import { setUser, clearUser } from '../../actions/user'
 
 import { connect } from 'react-redux'
 
-const Dashboard = ({ history, user: { isLoading, currentUser }, setUser, clearUser }) => {
+
+const Dashboard = ({
+  history,
+  user: { isLoading, currentUser },
+  setUser,
+  clearUser,
+  channel: { currentChannel }
+}) => {
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
@@ -32,9 +39,14 @@ const Dashboard = ({ history, user: { isLoading, currentUser }, setUser, clearUs
   return (
     <Grid columns="equal" className="app" style={{ background: '#eee' }}>
       <ColorPanel />
-      <SidePanel currentUser={currentUser} />
+      <SidePanel
+        key={currentUser && currentUser.id} 
+        currentUser={currentUser} />
       <Grid.Column style={{ marginLeft: 320 }}>
-        <Messages />
+        <Messages
+          key={currentChannel && currentChannel.id} 
+          currentChannel={currentChannel}
+          currentUser={currentUser} />
       </Grid.Column>
       <Grid.Column width={4}>
         <MetaPanel />
@@ -49,7 +61,8 @@ Dashboard.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  user: state.user
+  user: state.user,
+  channel: state.channel
 })
 
 export default connect(mapStateToProps, { setUser, clearUser })(Dashboard)
