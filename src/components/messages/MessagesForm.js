@@ -4,7 +4,7 @@ import { Segment, Button, Input } from 'semantic-ui-react'
 import firebase from '../../firebase'
 
 const MessagesForm = ({ messagesRef, currentChannel, currentUser }) => {
-    const [messageContent, setMessageContent] = useState('')
+    const [message, setMessage] = useState('')
     const [loading, setLoading] = useState(null)
     const [errors, setErrors] = useState([])
 
@@ -12,11 +12,11 @@ const MessagesForm = ({ messagesRef, currentChannel, currentUser }) => {
     const [user, setUser] = useState(currentUser)
 
     const handleChange = e => {
-        setMessageContent( e.target.value)
+        setMessage( e.target.value)
     }
 
     const sendMessage = () => {
-        if (messageContent) {
+        if (message) {
             setLoading(true)
             messagesRef
                 .child(channel.id)
@@ -24,7 +24,7 @@ const MessagesForm = ({ messagesRef, currentChannel, currentUser }) => {
                 .set(createMessage())
                 .then(() => {
                     setLoading(false)
-                    setMessageContent('')
+                    setMessage('')
                 })
                 .catch(err => {
                     console.error(err)
@@ -45,16 +45,16 @@ const MessagesForm = ({ messagesRef, currentChannel, currentUser }) => {
     }
 
     const createMessage = () => {
-        const message = {
+        const messageForCreation = {
             timestamp: firebase.database.ServerValue.TIMESTAMP,
             user: {
                 id: user.uid,
                 name: user.email,
                 avatar: 'gavatar.com'
             },
-            content: messageContent
+            content: message
         }
-        return message
+        return messageForCreation
     }
     return (
         <Segment className="message__form">
@@ -62,6 +62,7 @@ const MessagesForm = ({ messagesRef, currentChannel, currentUser }) => {
                 fluid
                 name="message"
                 onChange={(e) => handleChange(e)}
+                value={message}
                 style={{ marginBottom: '0.7em' }}
                 label={<Button icon={'add'} />}
                 labelPosition="left"
@@ -75,6 +76,7 @@ const MessagesForm = ({ messagesRef, currentChannel, currentUser }) => {
             <Button.Group icon widths="2">
                 <Button
                     onClick={() => sendMessage()}
+                    disabled={loading}
                     color="orange"
                     content="Add Replay"
                     labelPosition="left"
