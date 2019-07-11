@@ -12,8 +12,10 @@ import {
 } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import firebase from '../../../src/firebase'
+import {connect} from 'react-redux'
+import {login} from '../../actions/user'
 
-const Login = ({ history }) => {
+const Login = ({ history, login }) => {
 
     const [formData, setFormData] = useState({
         email: '',
@@ -37,10 +39,6 @@ const Login = ({ history }) => {
 
 
 
-    const displayErrors = errors => {
-        errors.map((error, i) => { return <p key={i}>{error.message}</p> });
-    }
-
     const isFormValid = ({ email, password }) => {
         return email && password
     }
@@ -49,24 +47,8 @@ const Login = ({ history }) => {
         e.preventDefault();
         if (isFormValid(formData)) {
             setErrors([])
-            setLoading(true)
-            firebase
-                .auth()
-                .signInWithEmailAndPassword(email, password)
-                .then(signedInUser => {
-                    console.log(signedInUser);
-                    setLoading(false);
-                    history.push("/");
-
-                })
-                .catch(err => {
-                    console.error(err);
-                    setLoading(false);
-                    setErrors([
-                        ...errors,
-                        err
-                    ]);
-                });
+            login({email, password}, history)
+                 
         }
 
     }
@@ -124,4 +106,4 @@ Login.propTypes = {
 
 }
 
-export default Login
+export default connect(null, {login})(Login)

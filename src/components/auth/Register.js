@@ -12,8 +12,10 @@ import {
 } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import firebase from '../../../src/firebase'
+import { connect } from 'react-redux'
+import { register } from '../../actions/user'
 
-const Register = ({ history }) => {
+const Register = ({ history, register, isLoading, isAuthenticated }) => {
 
     const [formData, setFormData] = useState({
         username: '',
@@ -65,9 +67,6 @@ const Register = ({ history }) => {
 
     }
 
-    const displayErrors = errors => {
-        errors.map((error, i) => { return <p key={i}>{error.message}</p> });
-    }
 
     const isPasswordValid = ({ password, passwordConfirmation }) => {
         if (password.length < 6 || passwordConfirmation.length < 6) {
@@ -102,23 +101,9 @@ const Register = ({ history }) => {
         e.preventDefault();
         if (isFormValid()) {
             setErrors([]);
-            setLoading(true);
-            firebase
-                .auth()
-                .createUserWithEmailAndPassword(email, password)
-                .then(createdUser => {
-                    console.log(createdUser)
-                    setLoading(false);
-                    history.push("/")
-                })
-                .catch(err => {
-                    console.error(err)
-                    setLoading(false);
-                    setErrors([
-                        ...errors,
-                        err
-                    ]);
-                });
+            //setLoading(true);
+            register({username, email, password}, history)
+           
         }
 
     }
@@ -192,4 +177,8 @@ Register.propTypes = {
 
 }
 
-export default Register
+const mapStateToProps = state => ({
+    isAuthenticated: state.user.isAuthenticated
+})
+
+export default connect(mapStateToProps, { register })(Register)

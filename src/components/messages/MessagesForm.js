@@ -48,7 +48,6 @@ const MessagesForm = ({ messagesRef, currentChannel, currentUser }) => {
         const messageForCreation = {
             timestamp: firebase.database.ServerValue.TIMESTAMP,
             user: {
-                id: user.uid,
                 name: user.email,
                 avatar: 'gavatar.com'
             },

@@ -21,18 +21,26 @@ const Dashboard = ({
   clearUser,
   channel: { currentChannel }
 }) => {
-console.log(currentChannel)
+  console.log(currentChannel)
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        setUser(user)
-        history.push("/")
-      }
-      else {
-        history.push("/login")
-        clearUser()
-      }
-    });
+    if (currentUser) {
+      setUser(currentUser)
+      history.push("/")
+    }
+    else {
+      history.push("/login")
+      clearUser()
+    }
+    // firebase.auth().onAuthStateChanged(user => {
+    //   if (user) {
+    //     setUser(user)
+    //     history.push("/")
+    //   }
+    //   else {
+    //     history.push("/login")
+    //     clearUser()
+    //   }
+    // });
   }, [])
 
 
@@ -40,11 +48,11 @@ console.log(currentChannel)
     <Grid columns="equal" className="app" style={{ background: '#eee' }}>
       <ColorPanel />
       <SidePanel
-        key={currentUser && currentUser.id} 
+        key={currentUser && currentUser.id}
         currentUser={currentUser} />
       <Grid.Column style={{ marginLeft: 320 }}>
         <Messages
-          key={currentChannel && currentChannel.id} 
+          key={currentChannel && currentChannel.id}
           currentChannel={currentChannel}
           currentUser={currentUser} />
       </Grid.Column>
