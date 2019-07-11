@@ -1,6 +1,6 @@
 import * as actionTypes from './types'
 import axios from 'axios'
-import { async } from 'q';
+
 
 
 
@@ -57,6 +57,6 @@ export const login = ({email, password}, history) => async dispatch =>{
         })
         history.push('/')
     } catch (error) {
-        
+        console.log(error)
     }
 }

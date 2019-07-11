@@ -50,6 +50,13 @@ const Login = ({ history, login }) => {
             login({email, password}, history)
                  
         }
+        else{
+            const error = { message: "Please fill all fields" };
+            setErrors([
+                ...errors,
+                error
+            ])
+        }
 
     }
 
