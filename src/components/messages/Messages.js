@@ -9,7 +9,6 @@ import firebase from '../../firebase'
 
 const Messages = ({ currentChannel, currentUser }) => {
 
-    //const [channel, setchannel]   = useState(currentChannel)
     const [user, setUser] = useState(currentUser)
     const [messages, setMessages] = useState([])
     const [messagesLoading, setMessagesLoading] = useState(true)

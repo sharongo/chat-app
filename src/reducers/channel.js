@@ -2,6 +2,7 @@ import * as actionTypes from '../actions/types'
 
 const initialState = {
     currentChannel: null,
+    channels: []
 };
 
 export default function (state = initialState, action) {
@@ -11,6 +12,18 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 currentChannel: payload.currentChannel
+            }
+        case actionTypes.SET_CHANNELS:
+            return {
+                ...state,
+                channels: payload.channels,
+                currentChannel: payload.channels[0]
+            }
+
+        case actionTypes.ADD_CHANNEL_SUCCESS:
+            return {
+                ...state,
+                channels: state.channels.concat(payload.channel)
             }
         default:
             return state;

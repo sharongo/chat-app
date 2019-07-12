@@ -4,10 +4,10 @@ import { Menu, Icon, Modal, Form, Input, Button } from 'semantic-ui-react'
 import firebase from '../../firebase'
 import { setCurrentChannel } from '../../actions/channel'
 import { connect } from 'react-redux'
+import {addChannel, addListeners} from '../../actions/channel'
 
 
-const Channels = ({ currentUser, setCurrentChannel }) => {
-    const [channels, setChannels] = useState([])
+const Channels = ({ currentUser, setCurrentChannel, addChannel, addListeners, channels }) => {
 
     const [modal, setModal] = useState(false)
 
@@ -18,10 +18,10 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
 
     const [firstLoad, setFirstLoad] = useState(true)
 
-    const [activeChannelId, setActiveChannelId] = useState('')
-
+    const [activeChannelId, setActiveChannelId] = useState(channels && channels.length > 0 && channels[0].id)
+    //const [activeChannelId, setActiveChannelId] = useState('')
     const { channelName, channelDetails } = channelData
-
+    console.log(channels)
     useEffect(() => {
         addListeners();
  
@@ -34,13 +34,7 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
         firebase.database().ref('channels').off()
     }
 
-    const addListeners = () => {
-        firebase.database().ref('channels').on('child_added', snap => {
-            setChannels(channels => channels.concat(snap.val()))
-            
-        })
-        
-    }
+    
 
     const setFirstChannel = () => {
         const firstChannel = channels[0]
@@ -76,40 +70,18 @@ const Channels = ({ currentUser, setCurrentChannel }) => {
         return channelName && channelDetails
     }
 
-    const addChannel = () => {
-        const key = firebase.database().ref('channels').push().key;
-
-        const newChannel = {
-            id: key,
-            name: channelName,
-            details: channelDetails,
-            createdBy: {
-                name: currentUser ? currentUser.email : 'defaultName',
-                avatar: 'avatar.com'
-            }
-
-        }
-        firebase.database().ref('channels')
-            .child(key)
-            .update(newChannel)
-            .then(() => {
-                setChannelData({
-                    channelName: '',
-                    channelDetails: ''
-                })
-                closeModal();
-                console.log('channel added')
-            })
-            .catch(err => {
-                console.error(err)
-            })
-
-    }
+    
 
     const handleSubmit = e => {
         e.preventDefault()
         if (isFormValid(channelData)) {
-            addChannel();
+            const newChannel = {
+                name: channelName,
+                details: channelDetails,
+                createdBy: currentUser.email
+            }
+            setModal(false)
+            addChannel(newChannel);
         } else {
 
         }
@@ -182,4 +154,8 @@ Channels.propTypes = {
     setCurrentChannel: PropTypes.func
 }
 
-export default connect(null, { setCurrentChannel })(Channels)
+const mapStateToProps = state => ({
+    channels: state.channel.channels
+})
+
+export default connect(mapStateToProps, { setCurrentChannel, addChannel, addListeners })(Channels)
