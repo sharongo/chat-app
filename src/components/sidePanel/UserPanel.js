@@ -3,9 +3,12 @@ import PropTypes from 'prop-types'
 import { Grid, Header, Icon, Dropdown } from 'semantic-ui-react'
 import { logout } from '../../actions/user'
 import { connect } from 'react-redux'
+import {Redirect} from 'react-router-dom'
 
 
 const UserPanel = ({ currentUser, logout, history }) => {
+
+    
 
     const dropdownOptions =
         [

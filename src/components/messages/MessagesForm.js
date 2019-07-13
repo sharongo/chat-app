@@ -17,7 +17,7 @@ const MessagesForm = ({ currentChannel, currentUser, createMessage }) => {
 
     const sendMessage = () => {
         if (message) {
-            //setLoading(true)
+           // setLoading(true)
             const messageForCreation = {
                 channelId: currentChannel.id,
                 user: user.email,
@@ -25,6 +25,7 @@ const MessagesForm = ({ currentChannel, currentUser, createMessage }) => {
 
             }
             createMessage(messageForCreation);
+            setMessage('')
         } else {
             setErrors([
                 ...errors,
