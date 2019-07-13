@@ -10,7 +10,7 @@ import store from './store';
 import Login from './components/auth/Login'
 import Register from './components/auth/Register'
 import Dashboard from './components/layout/Dashboard';
-import firebase from './firebase'
+
 
 
 function App() {

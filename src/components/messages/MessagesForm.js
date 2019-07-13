@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Segment, Button, Input } from 'semantic-ui-react'
-import firebase from '../../firebase'
 import { connect } from 'react-redux'
 import { createMessage } from '../../actions/message'
 
@@ -76,7 +75,7 @@ const MessagesForm = ({ currentChannel, currentUser, createMessage }) => {
 }
 
 MessagesForm.propTypes = {
-
+    createMessage: PropTypes.func
 }
 
 export default connect(null, { createMessage })(MessagesForm)

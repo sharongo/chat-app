@@ -4,6 +4,7 @@ import axios from 'axios'
 
 
 
+
 export const setUser = user => async dispatch => {
     try {
         dispatch({
@@ -27,8 +28,8 @@ export const clearUser = () => async dispatch => {
     }
 }
 
-export const register = ({username, email, password}, history) => async dispatch => {
-    const body = {username, email, password}
+export const register = ({ username, email, password }, history) => async dispatch => {
+    const body = { username, email, password }
     try {
         const res = await axios.post('http://localhost:5000/api/users/register', body)
         console.log(res.data)
@@ -44,8 +45,8 @@ export const register = ({username, email, password}, history) => async dispatch
     }
 }
 
-export const login = ({email, password}, history) => async dispatch =>{
-    const body = {email, password}
+export const login = ({ email, password }, history) => async dispatch => {
+    const body = { email, password }
     try {
         const res = await axios.post('http://localhost:5000/api/users/login', body)
         console.log(res.data)
@@ -60,8 +61,16 @@ export const login = ({email, password}, history) => async dispatch =>{
         dispatch({
             type: actionTypes.LOGIN_FAIL,
             payload: err.response.data
-            
+
         })
         console.log(err.response.data)
     }
+}
+
+export const logout = () => dispatch => {
+    dispatch({
+        type: actionTypes.CLEAR_USER,
+    
+    })
+    
 }

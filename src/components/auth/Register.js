@@ -11,7 +11,6 @@ import {
     GridColumn
 } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-import firebase from '../../../src/firebase'
 import { connect } from 'react-redux'
 import { register } from '../../actions/user'
 

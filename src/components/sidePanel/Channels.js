@@ -1,7 +1,6 @@
 import React, { useState, Fragment, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Menu, Icon, Modal, Form, Input, Button } from 'semantic-ui-react'
-import firebase from '../../firebase'
 import { setCurrentChannel } from '../../actions/channel'
 import { connect } from 'react-redux'
 import {addChannel, addListeners} from '../../actions/channel'
@@ -19,7 +18,7 @@ const Channels = ({ currentUser, setCurrentChannel, addChannel, addListeners, ch
     const [firstLoad, setFirstLoad] = useState(true)
 
     const [activeChannelId, setActiveChannelId] = useState(channels && channels.length > 0 && channels[0].id)
-    //const [activeChannelId, setActiveChannelId] = useState('')
+
     const { channelName, channelDetails } = channelData
     console.log(channels)
     useEffect(() => {
@@ -31,7 +30,7 @@ const Channels = ({ currentUser, setCurrentChannel, addChannel, addListeners, ch
     }, [])
 
     const removeListeners = () => {
-        firebase.database().ref('channels').off()
+        
     }
 
     

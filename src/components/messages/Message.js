@@ -6,12 +6,7 @@ import moment from 'moment'
 
 
 const Message = ({message, user}) => {
-    console.log(message)
-    console.log(user)
-
-    // const isOwnMessage = (message, user) => {
-    //     return message.user.id === user.uid ? 'message__self' : '';
-    // }
+  
     
     const timeFromNow = timestamp => {
         return moment(timestamp).fromNow()

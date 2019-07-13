@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Grid, Header, Icon, Dropdown } from 'semantic-ui-react'
-import firebase from '../../firebase'
+import { logout } from '../../actions/user'
+import { connect } from 'react-redux'
 
 
-const UserPanel = ({ currentUser }) => {
-    
+const UserPanel = ({ currentUser, logout, history }) => {
+
     const dropdownOptions =
         [
             {
@@ -24,10 +25,7 @@ const UserPanel = ({ currentUser }) => {
         ]
 
     const handleSignout = () => {
-        firebase
-            .auth()
-            .signOut()
-            .then(() => console.log("signed out!"));
+        logout()
     }
 
 
@@ -64,4 +62,4 @@ UserPanel.propTypes = {
 
 
 
-export default UserPanel
+export default connect(null, { logout })(UserPanel)
