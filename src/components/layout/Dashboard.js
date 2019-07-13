@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import firebase from '../../firebase'
-import { Redirect } from 'react-router-dom'
 import { Grid } from 'semantic-ui-react'
 
 import ColorPanel from '../colorPanel/ColorPanel'
@@ -21,7 +19,7 @@ const Dashboard = ({
   clearUser,
   channel: { currentChannel }
 }) => {
-  console.log(currentChannel)
+
   useEffect(() => {
     if (currentUser) {
       setUser(currentUser)

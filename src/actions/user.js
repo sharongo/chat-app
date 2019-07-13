@@ -56,7 +56,12 @@ export const login = ({email, password}, history) => async dispatch =>{
             }
         })
         history.push('/')
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        dispatch({
+            type: actionTypes.LOGIN_FAIL,
+            payload: err.response.data
+            
+        })
+        console.log(err.response.data)
     }
 }

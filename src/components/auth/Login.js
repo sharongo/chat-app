@@ -10,10 +10,10 @@ import {
     Icon,
 } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-import {connect} from 'react-redux'
-import {login} from '../../actions/user'
+import { connect } from 'react-redux'
+import { login } from '../../actions/user'
 
-const Login = ({ history, login }) => {
+const Login = ({ history, login, user: { errorMessage } }) => {
 
     const [formData, setFormData] = useState({
         email: '',
@@ -45,10 +45,10 @@ const Login = ({ history, login }) => {
         e.preventDefault();
         if (isFormValid(formData)) {
             setErrors([])
-            login({email, password}, history)
-                 
+            login({ email, password }, history)
+
         }
-        else{
+        else {
             const error = { message: "Please fill all fields" };
             setErrors([
                 ...errors,
@@ -88,6 +88,10 @@ const Login = ({ history, login }) => {
                         </Button>
                     </Segment>
                 </Form>
+                {errorMessage && <Message error>
+                    <h3>Errors:</h3>
+                    {errorMessage}
+                </Message>}
                 {errors && errors.length > 0 ? (
                     <Message error>
                         <h3>Errors:</h3>
@@ -111,4 +115,8 @@ Login.propTypes = {
     login: PropTypes.func
 }
 
-export default connect(null, {login})(Login)
+const mapStateToProps = state => ({
+    user: state.user
+})
+
+export default connect(mapStateToProps, { login })(Login)

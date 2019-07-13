@@ -3,7 +3,9 @@ import * as actionTypes from '../actions/types'
 const initialState = {
     currentUser: null,
     isLoading: null,
-    isAuthenticated: null
+    isAuthenticated: null,
+    errorMessage: ''
+    
 };
 
 export default function (state = initialState, action) {
@@ -22,7 +24,15 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 currentUser: null,
-                isLoading: false
+                isLoading: false,
+                isAuthenticated: false
+            }
+        case actionTypes.LOGIN_FAIL:
+            return{
+                ...state,
+                isLoading: false,
+                isAuthenticated: false,
+                errorMessage: payload
             }
         default:
             return state;

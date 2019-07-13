@@ -1,8 +1,7 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Sidebar, Menu, Divider, Button } from 'semantic-ui-react'
 
-const ColorPanel = props => {
+const ColorPanel = () => {
     return (
         <Sidebar 
             as={Menu}
@@ -18,10 +17,6 @@ const ColorPanel = props => {
             </Button>
         </Sidebar>
     )
-}
-
-ColorPanel.propTypes = {
-
 }
 
 export default ColorPanel
