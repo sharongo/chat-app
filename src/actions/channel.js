@@ -1,6 +1,6 @@
 import * as actionTypes from './types'
 import axios from 'axios'
-import { async } from 'q';
+
 
 
 export const setCurrentChannel = channel => async dispatch => {

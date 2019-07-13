@@ -4,31 +4,23 @@ import { Segment, Comment } from 'semantic-ui-react'
 import MessagesHeader from './MessagesHeader'
 import MessagesForm from './MessagesForm'
 import Message from './Message'
-import firebase from '../../firebase'
+import { connect } from 'react-redux'
+import { addMessagesListener } from '../../actions/message'
 
 
-const Messages = ({ currentChannel, currentUser }) => {
+const Messages = ({ currentChannel, currentUser, addMessagesListener, message: { messages } }) => {
 
     const [user, setUser] = useState(currentUser)
-    const [messages, setMessages] = useState([])
     const [messagesLoading, setMessagesLoading] = useState(true)
 
     useEffect(() => {
-        if(currentChannel && user){
+        if (currentChannel && user) {
             addListeners(currentChannel.id)
         }
     }, [])
 
     const addListeners = channelId => {
-        addMessageListener(channelId)
-    }
-
-    const addMessageListener = channelId => {
-        firebase.database().ref('messages').child(channelId).on('child_added', snap => {
-            setMessages(messages => messages.concat(snap.val()))
-            setMessagesLoading(false)     
-        })
-        console.log(messages)
+        addMessagesListener(channelId)
     }
 
     return (
@@ -37,7 +29,7 @@ const Messages = ({ currentChannel, currentUser }) => {
             <Segment>
                 <Comment.Group className="messages">
                     {messages && messages.length > 0 && messages.map(message => (
-                        <Message 
+                        <Message
                             key={message.timestamp}
                             message={message}
                             user={user}
@@ -46,15 +38,18 @@ const Messages = ({ currentChannel, currentUser }) => {
                 </Comment.Group>
             </Segment>
             <MessagesForm
-                currentChannel={currentChannel} 
-                messagesRef={firebase.database().ref('messages')}
+                currentChannel={currentChannel}
                 currentUser={user} />
         </Fragment>
     )
 }
 
 Messages.propTypes = {
-
+    message: PropTypes.object
 }
 
-export default Messages
+const mapStateToProps = state => ({
+    message: state.message
+})
+
+export default connect(mapStateToProps, { addMessagesListener })(Messages)

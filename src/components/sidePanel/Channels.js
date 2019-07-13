@@ -103,7 +103,7 @@ const Channels = ({ currentUser, setCurrentChannel, addChannel, addListeners, ch
                     </span>{' '}
                     ({channels.length}) <Icon name="add" onClick={() => openModal()} />
                 </Menu.Item>
-                {channels.length > 0 && channels.map(channel => (
+                {channels && channels.length > 0 && channels.map(channel => (
                     <Menu.Item
                         key={channel.id}
                         onClick={() => changeChannel(channel)}

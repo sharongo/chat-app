@@ -31,7 +31,6 @@ const UserPanel = ({ currentUser }) => {
     }
 
 
-
     return (
         <Grid style={{ backgroundColor: '#4c3c4c' }}>
             <Grid.Column>

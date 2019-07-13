@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
 import user from './user'
 import channel from './channel'
+import message from './message'
 
 
 
 export default combineReducers({
    user,
-   channel
+   channel,
+   message
 });

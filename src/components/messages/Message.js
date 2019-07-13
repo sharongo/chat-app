@@ -19,12 +19,12 @@ const Message = ({message, user}) => {
 
     return (
         <Comment>
-            <Comment.Avatar src={message && message.user && message.user.avatar}/>
+            <Comment.Avatar src={message && message.user && message.user}/>
             <Comment.Content>
                 <Comment.Author as="a">
-                    {message && message.user && message.user.name}
+                    {message && message.user && message.user}
                 </Comment.Author>
-                <Comment.Metadata>{timeFromNow(message.timestamp)}</Comment.Metadata>
+                <Comment.Metadata>{timeFromNow(message.time)}</Comment.Metadata>
                 <Comment.Text>{message.content}</Comment.Text>
             </Comment.Content>
         </Comment>

@@ -2,39 +2,31 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Segment, Button, Input } from 'semantic-ui-react'
 import firebase from '../../firebase'
+import { connect } from 'react-redux'
+import { createMessage } from '../../actions/message'
 
-const MessagesForm = ({ messagesRef, currentChannel, currentUser }) => {
+const MessagesForm = ({ currentChannel, currentUser, createMessage }) => {
     const [message, setMessage] = useState('')
     const [loading, setLoading] = useState(null)
     const [errors, setErrors] = useState([])
-    console.log(currentChannel)
     const [channel, setChannel] = useState(currentChannel)
     const [user, setUser] = useState(currentUser)
 
     const handleChange = e => {
-        setMessage( e.target.value)
+        setMessage(e.target.value)
     }
 
     const sendMessage = () => {
         if (message) {
-            setLoading(true)
-            messagesRef
-                .child(currentChannel.id)
-                .push()
-                .set(createMessage())
-                .then(() => {
-                    setLoading(false)
-                    setMessage('')
-                })
-                .catch(err => {
-                    console.error(err)
-                    setLoading(false)
-                    setErrors([
-                        ...errors,
-                        err
-                    ])
-                })
-        }else{
+            //setLoading(true)
+            const messageForCreation = {
+                channelId: currentChannel.id,
+                user: user.email,
+                content: message
+
+            }
+            createMessage(messageForCreation);
+        } else {
             setErrors([
                 ...errors,
                 {
@@ -44,17 +36,6 @@ const MessagesForm = ({ messagesRef, currentChannel, currentUser }) => {
         }
     }
 
-    const createMessage = () => {
-        const messageForCreation = {
-            timestamp: firebase.database.ServerValue.TIMESTAMP,
-            user: {
-                name: user.email,
-                avatar: 'gavatar.com'
-            },
-            content: message
-        }
-        return messageForCreation
-    }
     return (
         <Segment className="message__form">
             <Input
@@ -67,7 +48,7 @@ const MessagesForm = ({ messagesRef, currentChannel, currentUser }) => {
                 labelPosition="left"
                 className={
                     errors.some(error => {
-                        error.message.includes('message') 
+                        error.message.includes('message')
                     }) ? 'error' : ''
                 }
                 placeholder="Write Yout Message"
@@ -88,6 +69,7 @@ const MessagesForm = ({ messagesRef, currentChannel, currentUser }) => {
                     icon="cloud upload"
                 />
             </Button.Group>
+
         </Segment>
 
     )
@@ -97,4 +79,4 @@ MessagesForm.propTypes = {
 
 }
 
-export default MessagesForm
+export default connect(null, { createMessage })(MessagesForm)

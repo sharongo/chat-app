@@ -8,10 +8,8 @@ import {
     Header,
     Message,
     Icon,
-    GridColumn
 } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-import firebase from '../../../src/firebase'
 import {connect} from 'react-redux'
 import {login} from '../../actions/user'
 
@@ -110,7 +108,7 @@ const Login = ({ history, login }) => {
 }
 
 Login.propTypes = {
-
+    login: PropTypes.func
 }
 
 export default connect(null, {login})(Login)

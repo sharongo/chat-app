@@ -31,16 +31,6 @@ const Dashboard = ({
       history.push("/login")
       clearUser()
     }
-    // firebase.auth().onAuthStateChanged(user => {
-    //   if (user) {
-    //     setUser(user)
-    //     history.push("/")
-    //   }
-    //   else {
-    //     history.push("/login")
-    //     clearUser()
-    //   }
-    // });
   }, [])
 
 
